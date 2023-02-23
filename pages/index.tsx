@@ -1,82 +1,597 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import type { NextPage } from 'next';
+import { useAccount, useProvider, useSigner, useContract } from 'wagmi';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
+import { Network, Alchemy } from 'alchemy-sdk';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import NFTCrad from '../components/NFTCards';
+import { create } from 'ipfs-http-client';
+import { TextField } from '@material-ui/core';
 
 const Home: NextPage = () => {
+  const { address, isConnecting, isDisconnected, isConnected } = useAccount();
+  const [nfts, setNfts]: any = useState([]);
+  const [alchemy, setAlchemy]: any = useState(null);
+  const [openForm, setOpenForm]: any = useState(false);
+  const [title, setTitle] = useState('');
+  const [description, setdescription] = useState('');
+  const [image, setImage] = useState('');
+  const { data: signer, isError, isLoading } = useSigner();
+
+  // const nftAddress = '0xa051492C621f40719F5a202b202Df82b8AC336B4';
+  // const ABI = [
+  //   {
+  //     inputs: [
+  //       { internalType: 'string', name: 'name_', type: 'string' },
+  //       { internalType: 'string', name: 'symbol_', type: 'string' },
+  //     ],
+  //     stateMutability: 'nonpayable',
+  //     type: 'constructor',
+  //   },
+  //   {
+  //     anonymous: false,
+  //     inputs: [
+  //       {
+  //         indexed: true,
+  //         internalType: 'address',
+  //         name: '_owner',
+  //         type: 'address',
+  //       },
+  //       {
+  //         indexed: true,
+  //         internalType: 'address',
+  //         name: '_approved',
+  //         type: 'address',
+  //       },
+  //       {
+  //         indexed: true,
+  //         internalType: 'uint256',
+  //         name: '_tokenId',
+  //         type: 'uint256',
+  //       },
+  //     ],
+  //     name: 'Approval',
+  //     type: 'event',
+  //   },
+  //   {
+  //     anonymous: false,
+  //     inputs: [
+  //       {
+  //         indexed: true,
+  //         internalType: 'address',
+  //         name: '_owner',
+  //         type: 'address',
+  //       },
+  //       {
+  //         indexed: true,
+  //         internalType: 'address',
+  //         name: '_operator',
+  //         type: 'address',
+  //       },
+  //       {
+  //         indexed: false,
+  //         internalType: 'bool',
+  //         name: '_approved',
+  //         type: 'bool',
+  //       },
+  //     ],
+  //     name: 'ApprovalForAll',
+  //     type: 'event',
+  //   },
+  //   {
+  //     anonymous: false,
+  //     inputs: [
+  //       {
+  //         indexed: true,
+  //         internalType: 'address',
+  //         name: '_from',
+  //         type: 'address',
+  //       },
+  //       {
+  //         indexed: true,
+  //         internalType: 'address',
+  //         name: '_to',
+  //         type: 'address',
+  //       },
+  //       {
+  //         indexed: true,
+  //         internalType: 'uint256',
+  //         name: '_tokenId',
+  //         type: 'uint256',
+  //       },
+  //     ],
+  //     name: 'Transfer',
+  //     type: 'event',
+  //   },
+  //   {
+  //     inputs: [
+  //       { internalType: 'address', name: '_approved', type: 'address' },
+  //       { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+  //     ],
+  //     name: 'approve',
+  //     outputs: [],
+  //     stateMutability: 'payable',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
+  //     name: 'balanceOf',
+  //     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+  //     stateMutability: 'view',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+  //     name: 'getApproved',
+  //     outputs: [{ internalType: 'address', name: '', type: 'address' }],
+  //     stateMutability: 'view',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [
+  //       { internalType: 'address', name: '_owner', type: 'address' },
+  //       { internalType: 'address', name: '_operator', type: 'address' },
+  //     ],
+  //     name: 'isApprovedForAll',
+  //     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+  //     stateMutability: 'view',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [{ internalType: 'string', name: '_tokenURI', type: 'string' }],
+  //     name: 'mint',
+  //     outputs: [],
+  //     stateMutability: 'nonpayable',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [],
+  //     name: 'name',
+  //     outputs: [{ internalType: 'string', name: '', type: 'string' }],
+  //     stateMutability: 'view',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+  //     name: 'ownerOf',
+  //     outputs: [{ internalType: 'address', name: '', type: 'address' }],
+  //     stateMutability: 'view',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [
+  //       { internalType: 'address', name: '_from', type: 'address' },
+  //       { internalType: 'address', name: '_to', type: 'address' },
+  //       { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+  //     ],
+  //     name: 'safeTransferFrom',
+  //     outputs: [],
+  //     stateMutability: 'payable',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [
+  //       { internalType: 'address', name: '_from', type: 'address' },
+  //       { internalType: 'address', name: '_to', type: 'address' },
+  //       { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+  //       { internalType: 'bytes', name: '_data', type: 'bytes' },
+  //     ],
+  //     name: 'safeTransferFrom',
+  //     outputs: [],
+  //     stateMutability: 'payable',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [
+  //       { internalType: 'address', name: '_operator', type: 'address' },
+  //       { internalType: 'bool', name: '_approved', type: 'bool' },
+  //     ],
+  //     name: 'setApprovalForAll',
+  //     outputs: [],
+  //     stateMutability: 'nonpayable',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [
+  //       { internalType: 'bytes4', name: '_interfaceId', type: 'bytes4' },
+  //     ],
+  //     name: 'supportsInterface',
+  //     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+  //     stateMutability: 'pure',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [],
+  //     name: 'symbol',
+  //     outputs: [{ internalType: 'string', name: '', type: 'string' }],
+  //     stateMutability: 'view',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+  //     name: 'tokenURI',
+  //     outputs: [{ internalType: 'string', name: '', type: 'string' }],
+  //     stateMutability: 'view',
+  //     type: 'function',
+  //   },
+  //   {
+  //     inputs: [
+  //       { internalType: 'address', name: '_from', type: 'address' },
+  //       { internalType: 'address', name: '_to', type: 'address' },
+  //       { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+  //     ],
+  //     name: 'transferFrom',
+  //     outputs: [],
+  //     stateMutability: 'payable',
+  //     type: 'function',
+  //   },
+  // ];
+
+  const nftAddress = '0xb5B2322027267C29282e177eE68f0Ea08B83be2C';
+  const ABI = [
+    {
+      inputs: [
+        { internalType: 'string', name: 'name_', type: 'string' },
+        { internalType: 'string', name: 'symbol_', type: 'string' },
+      ],
+      stateMutability: 'nonpayable',
+      type: 'constructor',
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: 'address',
+          name: '_owner',
+          type: 'address',
+        },
+        {
+          indexed: true,
+          internalType: 'address',
+          name: '_approved',
+          type: 'address',
+        },
+        {
+          indexed: true,
+          internalType: 'uint256',
+          name: '_tokenId',
+          type: 'uint256',
+        },
+      ],
+      name: 'Approval',
+      type: 'event',
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: 'address',
+          name: '_owner',
+          type: 'address',
+        },
+        {
+          indexed: true,
+          internalType: 'address',
+          name: '_operator',
+          type: 'address',
+        },
+        {
+          indexed: false,
+          internalType: 'bool',
+          name: '_approved',
+          type: 'bool',
+        },
+      ],
+      name: 'ApprovalForAll',
+      type: 'event',
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
+          indexed: true,
+          internalType: 'address',
+          name: '_from',
+          type: 'address',
+        },
+        {
+          indexed: true,
+          internalType: 'address',
+          name: '_to',
+          type: 'address',
+        },
+        {
+          indexed: true,
+          internalType: 'uint256',
+          name: '_tokenId',
+          type: 'uint256',
+        },
+      ],
+      name: 'Transfer',
+      type: 'event',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_approved', type: 'address' },
+        { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+      ],
+      name: 'approve',
+      outputs: [],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+    {
+      inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
+      name: 'balanceOf',
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+      name: 'getApproved',
+      outputs: [{ internalType: 'address', name: '', type: 'address' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_owner', type: 'address' },
+        { internalType: 'address', name: '_operator', type: 'address' },
+      ],
+      name: 'isApprovedForAll',
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [{ internalType: 'string', name: '_tokenURI', type: 'string' }],
+      name: 'mint',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'name',
+      outputs: [{ internalType: 'string', name: '', type: 'string' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+      name: 'ownerOf',
+      outputs: [{ internalType: 'address', name: '', type: 'address' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_from', type: 'address' },
+        { internalType: 'address', name: '_to', type: 'address' },
+        { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+      ],
+      name: 'safeTransferFrom',
+      outputs: [],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_from', type: 'address' },
+        { internalType: 'address', name: '_to', type: 'address' },
+        { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+        { internalType: 'bytes', name: '_data', type: 'bytes' },
+      ],
+      name: 'safeTransferFrom',
+      outputs: [],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_operator', type: 'address' },
+        { internalType: 'bool', name: '_approved', type: 'bool' },
+      ],
+      name: 'setApprovalForAll',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'bytes4', name: '_interfaceId', type: 'bytes4' },
+      ],
+      name: 'supportsInterface',
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+      stateMutability: 'pure',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'symbol',
+      outputs: [{ internalType: 'string', name: '', type: 'string' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+      name: 'tokenURI',
+      outputs: [{ internalType: 'string', name: '', type: 'string' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: '_from', type: 'address' },
+        { internalType: 'address', name: '_to', type: 'address' },
+        { internalType: 'uint256', name: '_tokenId', type: 'uint256' },
+      ],
+      name: 'transferFrom',
+      outputs: [],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+  ];
+
+  const contract = useContract({
+    address: nftAddress,
+    abi: ABI,
+    signerOrProvider: signer,
+  });
+
+  useEffect(() => {
+    const settings = {
+      apiKey: '8J1ga7KYoBL4UqSgTq6ci7C4-jXFkgat', // Replace with your Alchemy API Key.
+      network: Network.ETH_GOERLI, // Replace with your network.
+    };
+    const alchemy = new Alchemy(settings);
+
+    setAlchemy(alchemy);
+  }, []);
+
+  useEffect(() => {
+    if (isConnected && alchemy && address) {
+      getNFTs(address);
+    }
+    if (isDisconnected) {
+      setNfts([]);
+    }
+  }, [isConnected, alchemy, address]);
+
+  async function getNFTs(address: string) {
+    try {
+      const nftsForOwner = await alchemy.nft.getNftsForOwner(address);
+      const ownedNfts = [];
+
+      nftsForOwner?.ownedNfts?.forEach((ele) => {
+        if (ele.tokenUri) {
+          ele.metadata = ele.rawMetadata;
+          ownedNfts.push(ele);
+        }
+      });
+
+      setNfts(ownedNfts);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const uploadImage = async (e: any) => {
+    const auth =
+      'Basic ' +
+      Buffer.from(
+        '2I8mUdhxBRUmCzTW1TMgzb0mp7v' + ':' + '02ca84d511e5c350f16b2176092ae565'
+      ).toString('base64');
+
+    const client = create({
+      url: 'https://ipfs.infura.io:5001',
+      headers: {
+        authorization: auth,
+      },
+    });
+    const response = await client.add(e.target.files[0]);
+    setImage(`https://ipfs.io/ipfs/${response.path}`);
+    console.log(client, response);
+  };
+
+  const createNFT = async () => {
+    if (!title || !description || !image) {
+      alert('fields are required');
+    }
+    const metadata: any = {
+      title,
+      description,
+      image,
+    };
+    console.log(metadata);
+
+    const auth =
+      'Basic ' +
+      Buffer.from(
+        '2I8mUdhxBRUmCzTW1TMgzb0mp7v' + ':' + '02ca84d511e5c350f16b2176092ae565'
+      ).toString('base64');
+    const client = create({
+      url: 'https://ipfs.infura.io:5001',
+      headers: {
+        authorization: auth,
+      },
+    });
+    const response = await client.add(JSON.stringify(metadata));
+    console.log(response, 'metadata');
+
+    console.log(contract);
+    const transaction = await contract?.mint(
+      `https://ipfs.io/ipfs/${response.path}`
+    );
+    console.log(transaction);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
         <title>RainbowKit App</title>
         <meta
-          name="description"
-          content="Generated by @rainbow-me/create-rainbowkit"
+          name='description'
+          content='Generated by @rainbow-me/create-rainbowkit'
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
         <ConnectButton />
-
-        <h1 className={styles.title}>
-          Welcome to <a href="">RainbowKit</a> + <a href="">wagmi</a> +{' '}
-          <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://rainbowkit.com" className={styles.card}>
-            <h2>RainbowKit Documentation &rarr;</h2>
-            <p>Learn how to customize your wallet connection flow.</p>
-          </a>
-
-          <a href="https://wagmi.sh" className={styles.card}>
-            <h2>wagmi Documentation &rarr;</h2>
-            <p>Learn how to interact with Ethereum.</p>
-          </a>
-
-          <a
-            href="https://github.com/rainbow-me/rainbowkit/tree/main/examples"
-            className={styles.card}
-          >
-            <h2>RainbowKit Examples &rarr;</h2>
-            <p>Discover boilerplate example RainbowKit projects.</p>
-          </a>
-
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Next.js Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Next.js Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <button onClick={() => setOpenForm(true)}>Create NFT</button>
       </main>
 
-      <footer className={styles.footer}>
-        <a href="https://rainbow.me" target="_blank" rel="noopener noreferrer">
-          Made with ❤️ by your frens at 🌈
-        </a>
-      </footer>
+      {openForm ? (
+        <div className={styles.formfield}>
+          <h2>Create Your NFT</h2>
+
+          <TextField
+            className={styles.textfield}
+            id='outlined-basic'
+            label='Title'
+            variant='outlined'
+            onChange={(e) => setTitle(e.target.value)}
+          />
+
+          <TextField
+            className={styles.textfield}
+            multiline
+            id='outlined-basic'
+            label='Description'
+            variant='outlined'
+            onChange={(e) => setdescription(e.target.value)}
+          />
+
+          <input
+            className={styles.textfield}
+            type='file'
+            id='nft'
+            name='nft'
+            accept='image/png, image/jpeg'
+            onChange={(e) => uploadImage(e)}
+          />
+
+          <button sx={{ mt: 2 }} variant='contained' onClick={createNFT}>
+            Deploy your NFT
+          </button>
+        </div>
+      ) : (
+        <div className={styles.main_content}>
+          {nfts.length ? (
+            nfts?.map((nft: any, index: any) => (
+              <div key={index}>
+                <NFTCrad nft={nft} key={index} />
+              </div>
+            ))
+          ) : (
+            <div>No NFT Available</div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
