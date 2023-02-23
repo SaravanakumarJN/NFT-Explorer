@@ -4,10 +4,10 @@ import FriendCard from "../friend-card";
 import SendCryptoForm from "../send-crypto-form";
 import { user_atom } from "../stores/user.store";
 import { useAtom } from "jotai";
+import Link from "next/link";
 
 function FriendRequest() {
   const [user_data] = useAtom(user_atom);
-  const [current_tab, setCurrentTab] = useState("friend_list"); // friend_list, pending_requests
   const [form_data, setFormData] = useState(null);
 
   const handleSendCrypto = (name, profile_img) => {
@@ -26,24 +26,32 @@ function FriendRequest() {
         <div className="">
           {/* Tabs to see pending requests */}
           <div className="flex gap-2">
-            <button
-              onClick={() => setCurrentTab("friend_list")}
-              className="px-4 py-6 flex text-5xl font-bold text-[#1e5cef] justify-center items-center"
-            >
+            <button className="py-6 flex text-5xl font-bold text-[#1e5cef] justify-center items-center">
               Community Peers
             </button>
           </div>
 
           <div className="flex flex-col gap-4">
-            {user_data?.friends?.map((item, index) => (
-              <FriendCard
-                profile_image={item?.profile_image}
-                name={item?.name}
-                client_id={item?.client_id}
-                is_friend={true}
-                handleSendCrypto={handleSendCrypto}
-              />
-            ))}
+            {user_data?.friends?.length === 0 ? (
+              <div className="flex flex-col gap-2">
+                <h3>Seems like you are new here.</h3>
+                <Link href="/find-friends" className="cursor-pointer">
+                  <span className="bg-[#1e5cef] text-white py-2 px-8 uppercase rounded-lg max-w-fit">
+                    Find Friends
+                  </span>
+                </Link>
+              </div>
+            ) : (
+              user_data?.friends?.map((item, index) => (
+                <FriendCard
+                  profile_image={item?.profile_image}
+                  name={item?.name}
+                  client_id={item?.client_id}
+                  is_friend={true}
+                  handleSendCrypto={handleSendCrypto}
+                />
+              ))
+            )}
           </div>
 
           {/* Form Data to send cryptos */}

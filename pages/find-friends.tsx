@@ -17,37 +17,49 @@ import LoginDialog from "../components/login-dialog";
 
 function FindFriends() {
   const [user_data, setUserData] = useAtom(user_atom);
+  const [login_error, setLoginError] = useState("");
+
   const [current_value, setCurrentValue] = useState("");
   const [friend_data, setFriendData] = useState(null);
   const [is_logged_in, setIsLoggedIn] = useState(false);
   const [open_login, setOpenLogin] = useState(false);
+  const [find_friend_error, setFindFriendError] = useState("");
+  const [became_friend, setBecameFriend] = useState(false);
 
   const handleChange = (event) => {
     const { value } = event?.target;
+    setFindFriendError("");
     setCurrentValue(value);
   };
 
   const handleUpdateFriends = async () => {
-    const myRef = doc(
-      firebaseDB,
-      "users",
-      user_data?.client_id?.split("+")?.[1]
-    );
+    const myRef = doc(firebaseDB, "users", user_data?.client_id);
 
     const { friends, ...other_data } = friend_data;
 
     const docref = await updateDoc(myRef, {
       friends: arrayUnion({ ...other_data }),
     });
-    console.log("fdk", docref);
+
+    setBecameFriend(true);
+    getUserDetails(user_data?.client_id);
   };
 
   const handleFindFriend = async () => {
-    console.log("current_value:", current_value);
-    const userRef = doc(firebaseDB, "users", `91${current_value}`);
-    const user_details = await (await getDoc(userRef)).data();
-    setFriendData(user_details);
-    console.log("friends:", user_details);
+    if (current_value === user_data?.client_id) {
+      setFindFriendError("You can't search for yourself.");
+      return;
+    }
+    const userRef = doc(firebaseDB, "users", `${current_value}`);
+    const user = await getDoc(userRef);
+
+    if (user?.exists()) {
+      const user_details = await (await getDoc(userRef)).data();
+      console.log("user_details", user_details);
+      setFriendData(user_details);
+    } else {
+      setFindFriendError("Oops, user doesn't exists.");
+    }
   };
 
   const handleLogin = () => {
@@ -59,7 +71,7 @@ function FindFriends() {
   };
 
   const getUserDetails = async (phone_number) => {
-    const userRef = doc(firebaseDB, "users", `91${phone_number}`);
+    const userRef = doc(firebaseDB, "users", `${phone_number}`);
     const user_details = await (await getDoc(userRef)).data();
     setUserData(user_details);
     setIsLoggedIn(true);
@@ -99,13 +111,19 @@ function FindFriends() {
                 is_friend={false}
                 handleSendCrypto={() => {}}
                 handleUpdateFriends={handleUpdateFriends}
+                became_friend={became_friend}
               />
-            )}{" "}
+            )}
+            {find_friend_error !== "" && (
+              <div className="text-red-500">{find_friend_error}</div>
+            )}
           </>
         ) : (
           <LoginDialog
             handleCloseLoginDialog={handleCloseLoginDialog}
             getUserDetails={getUserDetails}
+            login_error={login_error}
+            setLoginError={setLoginError}
           />
         )}
       </div>

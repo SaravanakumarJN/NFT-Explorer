@@ -1,25 +1,24 @@
-import { useAtom } from "jotai";
 import { memo, useState } from "react";
-import { user_atom } from "../stores/user.store";
 
-function LoginDialog({ handleCloseLoginDialog, getUserDetails }) {
+function LoginDialog({
+  handleCloseLoginDialog,
+  getUserDetails,
+  login_error,
+  setLoginError,
+}) {
   const [phone_number, setPhoneNumber] = useState("");
-  const [user_data, setUserData] = useAtom(user_atom);
 
   const handlePhoneChange = (event) => {
     const { value } = event?.target;
     if (value?.length <= 10) {
+      setLoginError("");
       setPhoneNumber(value);
     }
   };
 
   return (
     <div className="absolute top-0 left-0 h-full w-full z-10 backdrop-blur-sm flex justify-center items-center">
-      <div
-        className={`${
-          user_data === null ? "h-full grid place-items-center" : ""
-        }`}
-      >
+      <div className={`h-full grid place-items-center`}>
         <div className="w-[500px] h-[250px] bg-black rounded-3xl p-4">
           <div className="flex relative">
             <button
@@ -34,8 +33,12 @@ function LoginDialog({ handleCloseLoginDialog, getUserDetails }) {
           </div>
           <div className="pt-5">
             <div>
-              <h3 className="text-white font-bold text-xl">
-                Enter Phone Number
+              <h3
+                className={`${
+                  login_error === "" ? "text-white" : "text-red-500"
+                } font-bold text-xl`}
+              >
+                {login_error === "" ? "Enter Phone Number" : login_error}
               </h3>
             </div>
             <div className="flex items-center">
@@ -54,7 +57,7 @@ function LoginDialog({ handleCloseLoginDialog, getUserDetails }) {
               onClick={() => {
                 getUserDetails(phone_number);
               }}
-              className="bg-[#1e5cef] flex justify-center items-center py-3 px-5 text-white rounded-3xl "
+              className="bg-[#1e5cef] flex justify-center items-center py-3 px-10 text-white rounded-3xl "
             >
               Login
             </button>

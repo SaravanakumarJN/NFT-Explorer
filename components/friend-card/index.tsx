@@ -19,9 +19,10 @@ function FriendCard({
   is_friend,
   handleSendCrypto,
   handleUpdateFriends,
+  became_friend = false,
 }) {
   return (
-    <div className="flex items-center w-[500px] gap-4 p-4 justify-between rounded bg-white">
+    <div className="overflow-hidden flex items-center w-[500px] gap-4 p-4 justify-between rounded bg-white">
       <div className="rounded">
         <img
           src={profile_image}
@@ -34,15 +35,19 @@ function FriendCard({
         <span className="font-bold">{name}</span>
         <span className="">{client_id}</span>
       </div>
-      {!is_friend && (
-        <button
-          onClick={() => {
-            handleUpdateFriends();
-          }}
-          className=" bg-[#3772ff] text-white p-2 rounded-lg"
-        >
-          Add Friend
-        </button>
+      {became_friend ? (
+        <img className="scale-[2] w-11" src="https://i.gifer.com/7efs.gif" />
+      ) : (
+        !is_friend && (
+          <button
+            onClick={() => {
+              handleUpdateFriends();
+            }}
+            className=" bg-[#3772ff] text-white p-2 rounded-lg"
+          >
+            Add Friend
+          </button>
+        )
       )}
       {is_friend && (
         <button

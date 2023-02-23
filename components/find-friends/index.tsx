@@ -24,11 +24,7 @@ function FindFriends() {
   };
 
   const handleUpdateFriends = async () => {
-    const myRef = doc(
-      firebaseDB,
-      "users",
-      user_data?.client_id?.split("+")?.[1]
-    );
+    const myRef = doc(firebaseDB, "users", user_data?.client_id);
 
     const { friends, ...other_data } = friend_data;
 
@@ -39,7 +35,7 @@ function FindFriends() {
   };
 
   const handleFindFriend = async () => {
-    const userRef = doc(firebaseDB, "users", `91${current_value}`);
+    const userRef = doc(firebaseDB, "users", `${current_value}`);
     const user_details = await (await getDoc(userRef)).data();
     setFriendData(user_details);
     console.log("friends:", user_details);

@@ -15,18 +15,18 @@ import PopularCreatorCard from "../PopularCreatorCard";
 
 const HomePage = () => {
   const handleAddUser = async () => {
-    const cityRef = doc(firebaseDB, "users", "919643011147");
+    const cityRef = doc(firebaseDB, "users", "9643011147");
     const docRef = await setDoc(cityRef, {
       profile_image:
         "https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip",
       name: "chiranjeev",
-      client_id: "+919643011147",
+      client_id: "9643011147",
       wallet_address: "",
       community_id: "@chiranjeev.t",
 
       friends: [
         {
-          client_id: "+918360025206",
+          client_id: "8360025206",
           community_id: "@jaskaran99",
           name: "Jaskaran Singh",
           profile_image:
@@ -59,7 +59,7 @@ const HomePage = () => {
   };
 
   const handleUpdateFriends = async () => {
-    const friendRef = doc(firebaseDB, "users", "918360025206");
+    const friendRef = doc(firebaseDB, "users", "8360025206");
 
     const user = await getDoc(friendRef);
 
