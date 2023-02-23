@@ -1,5 +1,5 @@
+import Link from "next/link";
 import styled from "styled-components";
-
 
 const MainCon = styled.div`
   width: 18%;
@@ -29,6 +29,14 @@ const rounts = [
     name: "Schedule",
     route: "schedule",
   },
+  {
+    name: "Friends",
+    route: "friends",
+  },
+  {
+    name: "Find Friends",
+    route: "find-friends",
+  },
 ];
 
 const LeftBar = () => {
@@ -46,9 +54,10 @@ const LeftBar = () => {
           </div>
         </LogoConatiner>
         <div className="flex flex-col gap-3">
-          {rounts.map(({ name }, index) => {
+          {rounts.map(({ name, route }, index) => {
             return (
-              <div
+              <Link
+                href={route}
                 className={`w-[70%] py-3 px-3 rounded-full cursor-pointer ${
                   index === 0 ? "bg-[#f4f7ff]" : ""
                 }`}
@@ -60,7 +69,7 @@ const LeftBar = () => {
                 >
                   {name}
                 </h2>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -69,7 +78,6 @@ const LeftBar = () => {
         <div>
           <h1>Your Balance: 23423</h1>
         </div>
-       
       </FooterCon>
     </MainCon>
   );
