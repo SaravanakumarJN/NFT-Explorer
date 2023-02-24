@@ -41,7 +41,7 @@ const NewPost = ({ setuplaodClicked, createNFT }: any) => {
   const FileRef = useRef<any>();
   const [imageUrl, setImageUrl] = useState("");
   const [postDetails, setPostDetails] = useState({
-    ...posts[c].node,
+    ...posts[0].node,
     name: "",
     description: "",
     userName: user_data?.community_id ?? "@jaskaran",

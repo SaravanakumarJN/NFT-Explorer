@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import React from 'react';
-import NftCard from '../NftCard';
+import NftCard from '../NftCard/index2';
 import { user_atom, user_nfts } from '../stores/user.store';
 
 export const posts = [
@@ -748,22 +748,16 @@ const MyNft = () => {
   return (
     <div className='grid grid-cols-3 gap-4 p-5 justify-center'>
       {nft.map(({ metadata }, i) => {
-        const { image, title, description } = metadata;
+
+        const { image, title, name, description } = metadata;
 
         return (
           <div className='w-fit'>
             <NftCard
               key={i}
               image={image}
-              // coinImage='https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/ethereum.svg'
-              // coinExt='ETH'
-              // price={9.04}
-              // isVerified={node?.verificationStatus === 'VERIFIED'}
-              likes={Math.floor(Math.random() * 1000)}
-              // userName='Ofspace NFT'
-              // userId={`@${image.split('').splice(0, 10).join('')}`}
-              title={title}
-              // userImage='https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip'
+              title={title || name}
+              description={description}
             />
           </div>
         );
