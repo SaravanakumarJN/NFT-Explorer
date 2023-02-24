@@ -5,6 +5,7 @@ import CreateIcon from "../../assets/icons/create.png";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import NewPost from "../NewPost";
+import { useRouter } from "next/router";
 
 const MainCon = styled.div``;
 
@@ -44,6 +45,7 @@ const rounts = [
 ];
 
 const LeftBar = ({ createNFT }: any) => {
+  const router = useRouter();
   const [uplaodClicked, setuplaodClicked] = useState(false);
 
   return (
@@ -59,18 +61,20 @@ const LeftBar = ({ createNFT }: any) => {
             <h5 className="text-sm font-semibold text-slate-400">Creator</h5>
           </div>
         </LogoConatiner>
-        <div className="flex flex-col gap-3">
+        <div className="cursor-pointer flex flex-col gap-3">
           {rounts.map(({ name, route }, index) => {
             return (
               <Link
                 href={route}
-                className={`w-[70%] py-3 px-3 rounded-full cursor-pointer ${
+                className={`cursor-pointer w-[70%] py-3 px-3 rounded-full cursor-pointer ${
                   index === 0 ? "bg-[#f4f7ff]" : ""
                 }`}
               >
                 <h2
                   className={`font-semibold text-sm ${
-                    index === 0 ? "text-[#3b68fe]" : "text-[#a2adc0]"
+                    router.pathname === `/${route}`
+                      ? "text-[#3b68fe]"
+                      : "text-[#a2adc0]"
                   } `}
                 >
                   {name}
