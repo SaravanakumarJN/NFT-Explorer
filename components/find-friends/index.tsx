@@ -12,11 +12,13 @@ import { firebaseDB } from "../../firebase.cofig";
 import FriendCard from "../friend-card";
 import { user_atom } from "../stores/user.store";
 import { useAtom } from "jotai";
+import ThreeDots from "../animation/three-dots";
 
 function FindFriends() {
   const [user_data, setUserData] = useAtom(user_atom);
   const [current_value, setCurrentValue] = useState("");
   const [friend_data, setFriendData] = useState(null);
+  const [find_friend_progress, setFindFriendProgress] = useState(false);
 
   const handleChange = (event) => {
     const { value } = event?.target;
@@ -31,14 +33,15 @@ function FindFriends() {
     const docref = await updateDoc(myRef, {
       friends: arrayUnion({ ...other_data }),
     });
-    console.log("fdk", docref);
   };
 
   const handleFindFriend = async () => {
+    setFriendData(null);
+    setFindFriendProgress(true);
     const userRef = doc(firebaseDB, "users", `${current_value}`);
     const user_details = await (await getDoc(userRef)).data();
     setFriendData(user_details);
-    console.log("friends:", user_details);
+    setFindFriendProgress(false);
   };
 
   return (
@@ -55,7 +58,7 @@ function FindFriends() {
           onClick={handleFindFriend}
           className="cursor-pointer bg-[#1e5cef] text-white py-2 px-8 uppercase rounded-lg"
         >
-          Search
+          {find_friend_progress ? <ThreeDots color="text-white" /> : "Search"}
         </button>
       </div>
       {friend_data !== null && (

@@ -12,6 +12,7 @@ import {
 import { firebaseDB } from "../../firebase.cofig";
 import { useAtom } from "jotai";
 import { user_atom } from "../stores/user.store";
+import ThreeDots from "../animation/three-dots";
 
 function SendCryptoForm({
   receiver_name,
@@ -24,6 +25,7 @@ function SendCryptoForm({
 }) {
   const [amount, setAmount] = useState("");
   const [user_data, setUserData] = useAtom(user_atom);
+  const [in_progress, setInProgress] = useState(false);
 
   const handleChange = (event) => {
     const { value } = event?.target;
@@ -42,6 +44,7 @@ function SendCryptoForm({
   };
 
   const handleTransfer = async (symbol, quantity) => {
+    setInProgress(true);
     symbol = symbol?.toLowerCase();
     const userRef = doc(firebaseDB, "users", user_data?.client_id);
     const userWalletRef = doc(firebaseDB, "balances", user_data?.client_id);
@@ -67,6 +70,8 @@ function SendCryptoForm({
     } else {
       console.log("user doesn't exists");
     }
+    setInProgress(false);
+    handleCloseSendCrypto();
   };
 
   return (
@@ -114,7 +119,7 @@ function SendCryptoForm({
             onClick={() => handleTransfer(coin_symbol, amount)}
             className="cursor-pointer bg-[#1e5cef] flex justify-center items-center py-3 px-5 text-white rounded-3xl "
           >
-            Send Crypto
+            {in_progress ? <ThreeDots color="text-white" /> : "Send Crypto"}
           </button>
           {/* <button
             onClick={handleAddUserBalance}

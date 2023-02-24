@@ -14,6 +14,7 @@ import { user_atom } from "../components/stores/user.store";
 import FriendCard from "../components/friend-card";
 import Layout from "../components/Layout";
 import LoginDialog from "../components/login-dialog";
+import ThreeDots from "../components/animation/three-dots";
 
 function FindFriends() {
   const [user_data, setUserData] = useAtom(user_atom);
@@ -26,6 +27,7 @@ function FindFriends() {
   const [open_login, setOpenLogin] = useState(false);
   const [find_friend_error, setFindFriendError] = useState("");
   const [became_friend, setBecameFriend] = useState(false);
+  const [find_friend_progress, setFindFriendProgress] = useState(false);
 
   const handleChange = (event) => {
     const { value } = event?.target;
@@ -47,8 +49,10 @@ function FindFriends() {
   };
 
   const handleFindFriend = async () => {
+    setFindFriendProgress(true);
     if (current_value === user_data?.client_id) {
       setFindFriendError("You can't search for yourself.");
+      setFindFriendProgress(false);
       return;
     }
     const userRef = doc(firebaseDB, "users", `${current_value}`);
@@ -61,6 +65,7 @@ function FindFriends() {
     } else {
       setFindFriendError("Oops, user doesn't exists.");
     }
+    setFindFriendProgress(false);
   };
 
   const handleLogin = () => {
@@ -104,7 +109,11 @@ function FindFriends() {
                 onClick={handleFindFriend}
                 className="cursor-pointer bg-[#1e5cef] text-white py-2 px-8 uppercase rounded-lg"
               >
-                Search
+                {find_friend_progress ? (
+                  <ThreeDots color="text-white" />
+                ) : (
+                  "Search"
+                )}
               </button>
             </div>
             {friend_data !== null && (
