@@ -747,7 +747,7 @@ const MyNft = () => {
   // console.log(user_data)
   return (
     <div className='p-5'>
-      <h1 className=''>My Assets</h1>
+      <h1 className='text-lg font-semibold mb-3'>My Assets</h1>
  <div className='flex  gap-6  flex-wrap m-auto'>
       {nft.map(({ metadata }, i) => {
         const { image, title, name, description } = metadata;
