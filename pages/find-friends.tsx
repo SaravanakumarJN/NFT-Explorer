@@ -33,6 +33,8 @@ function FindFriends() {
     const { value } = event?.target;
     setFindFriendError("");
     setCurrentValue(value);
+    setBecameFriend(false);
+    setFriendData(null);
   };
 
   const handleUpdateFriends = async () => {
