@@ -61,7 +61,6 @@ const NewPost = ({ setuplaodClicked, createNFT }: any) => {
     };
     const docRef = await setDoc(postsRef, post);
     createNFT(post);
-    console.log(docRef);
   };
 
   function uploadFile() {
@@ -120,7 +119,6 @@ const NewPost = ({ setuplaodClicked, createNFT }: any) => {
     }
     setIsLoginLoading(false);
   };
-  console.log(user_data, "SDvmlsdlkm");
 
   return (
     <>

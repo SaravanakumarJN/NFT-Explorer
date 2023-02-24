@@ -1,4 +1,5 @@
-import { atom } from "jotai";
+import { atom } from 'jotai';
 
 export const user_atom = atom(null);
 export const user_balances = atom(null);
+export const user_nfts = atom([]);

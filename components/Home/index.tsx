@@ -107,10 +107,6 @@ const HomePage = () => {
     }
     return result;
 }
-
-
-
-console.log(posts)
   return (
     <div className="flex-1 py-10 px-7 ">
       <div className="bg-white py-2 px-4 w-[40%] rounded-full flex items-center gap-2">
@@ -126,7 +122,7 @@ console.log(posts)
           const image = node?.banner?.split("files/")?.[1]?.split("?")?.[0]
           return image && (
             <NftCard
-            key={node.id}
+              key={node.id}
               image={`https://dl.openseauserdata.com/cache/originImage/files/${image}`}
               coinImage="https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/ethereum.svg"
               coinExt="ETH"
