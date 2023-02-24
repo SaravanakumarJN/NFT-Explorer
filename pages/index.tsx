@@ -6,16 +6,17 @@ import { create } from "ipfs-http-client";
 import Layout from "../components/Layout";
 import HomePage from "../components/Home";
 import { toast } from "react-toastify";
+import { useAtom } from "jotai";
+import { user_nfts } from "../components/stores/user.store";
 
 const Home: NextPage = () => {
   const { address, isDisconnected, isConnected } = useAccount();
-  const [nfts, setNfts]: any = useState([]);
-  console.log(nfts, "f,nk");
   const [alchemy, setAlchemy]: any = useState(null);
   const [title, setTitle] = useState("");
   const [description, setdescription] = useState("");
   const [image, setImage] = useState("");
   const { data: signer, isError, isLoading } = useSigner();
+  const [nfts, setNfts] = useAtom(user_nfts);
 
   const notify = (message) =>
     toast(message, {
@@ -258,13 +259,10 @@ const Home: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (isConnected && alchemy && address) {
+    if (alchemy && address) {
       getNFTs(address);
     }
-    if (isDisconnected) {
-      setNfts([]);
-    }
-  }, [isConnected, alchemy, address]);
+  }, [alchemy, address]);
 
   async function getNFTs(address: string) {
     try {

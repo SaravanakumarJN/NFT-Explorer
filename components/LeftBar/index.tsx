@@ -90,7 +90,7 @@ const LeftBar = ({ createNFT }: any) => {
       </div>
       <FooterCon className="">
         <ConnectButton />
-        <div className="mb-4 mt-5 opacity-50 hover:opacity-100">
+        <div className="m-4 opacity-50 hover:opacity-100">
           <div className="border-[1px] border-black w-fit px-5 py-2 rounded-3xl">
             <button
               className="flex items-center gap-2 font-medium"
