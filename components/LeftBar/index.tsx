@@ -23,8 +23,8 @@ const rounts = [
     route: "My Collection",
   },
   {
-    name: "Market",
-    route: "market",
+    name: "My Assets",
+    route: "my-asset",
   },
   {
     name: "Sales",
