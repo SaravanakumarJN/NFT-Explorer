@@ -10,21 +10,42 @@ const ImageBanner = styled.div<{ image: string }>`
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  filter: blur(10px);
+  filter: blur(10px) brightness(80%);
 `;
 
 const Post = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [postsData, setPostsData] = useAtom(posts_data);
-  const { id } = router.query
-  const image =
-    "https://cdn.prod.www.spiegel.de/images/d2caafb1-70da-47e2-ba48-efd66565cde1_w996_r0.9975262832405689_fpx44.98_fpy48.86.jpg";
+  const { id } = router.query;
+  const data = postsData?.filter(({ node }) => {
+    return node.id === id;
+  })[0]?.node;
+
+  console.log(data);
+  const image = `https://dl.openseauserdata.com/cache/originImage/files/${data?.banner?.split("files/")?.[1]?.split("?")?.[0]}`
   return (
     <Layout>
-      <div className="w-[100%] h-[50%] overflow-hidden">
-        <ImageBanner image={image} className="w-[100%] h-[100%] scale-[1.1]" />
+      <div className="w-full h-[40%]">
+        <div className="w-full h-full overflow-hidden">
+          <ImageBanner
+            image={image}
+            className="w-[100%] h-[100%] scale-[1.1]"
+          />
+        </div>
+        <div className="flex items-start justify-between px-4">
+
+        <div className="ml-3 w-fit flex gap-3">
+          <img src={image} className="w-[30%] rounded-full translate-y-[-50%] aspect-square object-cover" />
+          <div>
+          <h1 className="mt-2 text-2xl font-bold">{data.name}</h1>
+          <h3 className="mt-2 text-sm text-gray-500 font-semibold">{data.slug}</h3>
+          </div>
+        </div>
+        <button className="bg-[#3772ff] mt-2 py-2 px-7 cursor-pointer text-white font-bold text-sm rounded-full">
+                Buy
+              </button>
+        </div>
       </div>
-      {id}
     </Layout>
   );
 };

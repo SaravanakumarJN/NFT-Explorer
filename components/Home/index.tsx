@@ -141,11 +141,13 @@ const HomePage = () => {
                 coinImage="https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/ethereum.svg"
                 coinExt="ETH"
                 price={9.04}
+                
                 isVerified={node?.verificationStatus === "VERIFIED"}
                 likes={Math.floor(Math.random() * 1000)}
                 userName="Ofspace NFT"
                 userId={`@${image.split("").splice(0, 10).join("")}`}
                 title={node.name}
+                node={node}
                 userImage="https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip"
               />
             )

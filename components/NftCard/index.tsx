@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FC } from "react";
 import styled from "styled-components";
 import VerifiedIcon from "../../assets/icons/verified.png";
@@ -12,7 +13,8 @@ interface NftCardProps {
   title: string;
   likes: number;
   userImage: string;
-  isVerified:boolean
+  isVerified:boolean;
+  node:any
 }
 const ImageBox = styled.div<{ image: string }>`
   background-image: url("${({ image }) => image}");
@@ -28,10 +30,13 @@ const NftCard: FC<NftCardProps> = ({
   title,
   likes,
   userImage,
-  isVerified
+  isVerified,
+  node
 }) => {
   console.log(VerifiedIcon.src)
   return (
+    <Link href={`/post/${node.id}`}>
+
     <div className="bg-white w-fit rounded-3xl p-3 flex flex-col">
       <ImageBox
         {...{ image }}
@@ -71,6 +76,7 @@ const NftCard: FC<NftCardProps> = ({
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 
