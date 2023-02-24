@@ -1,4 +1,5 @@
 import { memo, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 import {
   addDoc,
@@ -26,6 +27,14 @@ function SendCryptoForm({
   const [amount, setAmount] = useState("");
   const [user_data, setUserData] = useAtom(user_atom);
   const [in_progress, setInProgress] = useState(false);
+  const notify = (message) =>
+    toast(message, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: "light",
+    });
 
   const handleChange = (event) => {
     const { value } = event?.target;
@@ -67,6 +76,7 @@ function SendCryptoForm({
           [symbol]: Number(user_wallet_details?.[symbol]) - Number(quantity),
         });
       }
+      notify("Transaction Completed!");
     } else {
       console.log("user doesn't exists");
     }
