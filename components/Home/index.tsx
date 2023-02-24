@@ -16,6 +16,7 @@ import PopularCreatorCard from "../PopularCreatorCard";
 import { useAtom } from "jotai";
 import { posts_data, user_atom } from "../stores/user.store";
 import { useEffect, useRef, useState } from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const HomePage = () => {
   const [user_data] = useAtom(user_atom);
@@ -112,6 +113,8 @@ const HomePage = () => {
   console.log(posts);
   return (
     <div className="flex-1 py-10 px-7 ">
+      <div className="flex justify-between m-5">
+
       <div className="bg-white py-2 px-4 w-[40%] rounded-full flex items-center gap-2">
         <img src={SearchIcon.src} className="w-[15px]" />
         <input
@@ -129,6 +132,8 @@ const HomePage = () => {
             else setPosts(postsRef.current);
           }}
         />
+      </div>
+      <ConnectButton />
       </div>
       <div className="mt-4 flex gap-5 w-full overflow-scroll">
         {posts.map(({ node }) => {

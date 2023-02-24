@@ -2,7 +2,6 @@ import { useState } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import CreateIcon from "../../assets/icons/create.png";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import NewPost from "../NewPost";
 import { useRouter } from "next/router";
@@ -89,7 +88,7 @@ const LeftBar = ({ createNFT }: any) => {
         </div>
       </div>
       <FooterCon className="">
-        <ConnectButton />
+       
         <div className="m-4 opacity-50 hover:opacity-100">
           <div className="border-[1px] border-black w-fit px-5 py-2 rounded-3xl">
             <button
