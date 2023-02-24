@@ -22,6 +22,7 @@ function FindFriends() {
   const [current_value, setCurrentValue] = useState("");
   const [friend_data, setFriendData] = useState(null);
   const [is_logged_in, setIsLoggedIn] = useState(false);
+  const [is_login_loading, setIsLoginLoading] = useState(false);
   const [open_login, setOpenLogin] = useState(false);
   const [find_friend_error, setFindFriendError] = useState("");
   const [became_friend, setBecameFriend] = useState(false);
@@ -71,12 +72,14 @@ function FindFriends() {
   };
 
   const getUserDetails = async (phone_number) => {
+    setIsLoginLoading(true);
     const userRef = doc(firebaseDB, "users", `${phone_number}`);
     const user_details = await (await getDoc(userRef)).data();
 
     setUserData(user_details);
     setIsLoggedIn(true);
     setOpenLogin(false);
+    setIsLoginLoading(false);
   };
 
   return (
@@ -99,7 +102,7 @@ function FindFriends() {
               />
               <button
                 onClick={handleFindFriend}
-                className="bg-[#1e5cef] text-white py-2 px-8 uppercase rounded-lg"
+                className="cursor-pointer bg-[#1e5cef] text-white py-2 px-8 uppercase rounded-lg"
               >
                 Search
               </button>
@@ -125,6 +128,7 @@ function FindFriends() {
             getUserDetails={getUserDetails}
             login_error={login_error}
             setLoginError={setLoginError}
+            is_login_loading={is_login_loading}
           />
         )}
       </div>

@@ -43,7 +43,7 @@ function FriendCard({
             onClick={() => {
               handleUpdateFriends();
             }}
-            className=" bg-[#3772ff] text-white p-2 rounded-lg"
+            className="cursor-pointer bg-[#3772ff] text-white p-2 rounded-lg"
           >
             Add Friend
           </button>
@@ -54,7 +54,7 @@ function FriendCard({
           onClick={() => {
             handleSendCrypto(name, profile_image, client_id);
           }}
-          className="bg-[#3772ff] text-white p-2 rounded-lg"
+          className="cursor-pointer bg-[#3772ff] text-white p-2 rounded-lg"
         >
           Send Cryptos
         </button>

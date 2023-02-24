@@ -56,12 +56,12 @@ function SendCryptoForm({
       const receiver_details = await (await getDoc(receiverWalletRef)).data();
       const user_wallet_details = await (await getDoc(userWalletRef)).data();
 
-      if (user_wallet_details?.[symbol] >= quantity) {
+      if (Number(user_wallet_details?.[symbol]) >= Number(quantity)) {
         const docref = await updateDoc(receiverWalletRef, {
-          [symbol]: receiver_details?.[symbol] + quantity,
+          [symbol]: Number(receiver_details?.[symbol]) + Number(quantity),
         });
         const doc2ref = await updateDoc(userWalletRef, {
-          [symbol]: user_wallet_details?.[symbol] - quantity,
+          [symbol]: Number(user_wallet_details?.[symbol]) - Number(quantity),
         });
       }
     } else {
@@ -75,7 +75,7 @@ function SendCryptoForm({
         <div className="flex relative">
           <button
             onClick={handleCloseSendCrypto}
-            className="text-white font-semibold absolute top-2 right-2"
+            className="cursor-pointer text-white font-semibold absolute top-2 right-2"
           >
             Close
           </button>
@@ -97,6 +97,7 @@ function SendCryptoForm({
           <div className="flex items-center">
             <input
               type="number"
+              autoFocus={true}
               value={amount}
               onChange={handleChange}
               placeholder={`0 ${coin_symbol}`}
@@ -111,7 +112,7 @@ function SendCryptoForm({
         <div className="pt-5">
           <button
             onClick={() => handleTransfer(coin_symbol, amount)}
-            className="bg-[#1e5cef] flex justify-center items-center py-3 px-5 text-white rounded-3xl "
+            className="cursor-pointer bg-[#1e5cef] flex justify-center items-center py-3 px-5 text-white rounded-3xl "
           >
             Send Crypto
           </button>

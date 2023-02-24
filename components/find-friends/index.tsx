@@ -53,7 +53,7 @@ function FindFriends() {
         />
         <button
           onClick={handleFindFriend}
-          className="bg-[#1e5cef] text-white py-2 px-8 uppercase rounded-lg"
+          className="cursor-pointer bg-[#1e5cef] text-white py-2 px-8 uppercase rounded-lg"
         >
           Search
         </button>

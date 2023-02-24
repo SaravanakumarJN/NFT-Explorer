@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [login_error, setLoginError] = useState("");
   const [user_data, setUserData] = useAtom(user_atom);
   const [form_data, setFormData] = useState(null);
+  const [is_login_loading, setIsLoginLoading] = useState(false);
   const [open_login, setOpenLogin] = useState(false);
 
   const handleSendCrypto = (name, profile_img, client_id) => {
@@ -59,6 +60,7 @@ const Dashboard = () => {
   };
 
   const getUserDetails = async (phone_number) => {
+    setIsLoginLoading(true);
     const userRef = doc(firebaseDB, "users", `${phone_number}`);
     const user = await getDoc(userRef);
 
@@ -71,6 +73,7 @@ const Dashboard = () => {
     } else {
       setLoginError("User Doesn't Exists");
     }
+    setIsLoginLoading(false);
   };
 
   return (
@@ -86,6 +89,7 @@ const Dashboard = () => {
                 getUserDetails={getUserDetails}
                 login_error={login_error}
                 setLoginError={setLoginError}
+                is_login_loading={is_login_loading}
               />
             )}
           </div>

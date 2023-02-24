@@ -1,12 +1,15 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import ThreeDots from "../animation/three-dots";
 
 function LoginDialog({
   handleCloseLoginDialog,
   getUserDetails,
   login_error,
   setLoginError,
+  is_login_loading,
 }) {
   const [phone_number, setPhoneNumber] = useState("");
+  const inputRef = useRef();
 
   const handlePhoneChange = (event) => {
     const { value } = event?.target;
@@ -16,6 +19,10 @@ function LoginDialog({
     }
   };
 
+  useEffect(() => {
+    inputRef?.current?.focus();
+  }, []);
+
   return (
     <div className="absolute top-0 left-0 h-full w-full z-10 backdrop-blur-sm flex justify-center items-center">
       <div className={`h-full grid place-items-center`}>
@@ -23,7 +30,7 @@ function LoginDialog({
           <div className="flex relative">
             <button
               onClick={handleCloseLoginDialog}
-              className="text-white font-semibold absolute top-2 right-2"
+              className="cursor-pointer text-white font-semibold absolute top-2 right-2"
             >
               Close
             </button>
@@ -43,7 +50,9 @@ function LoginDialog({
             </div>
             <div className="flex items-center">
               <input
+                ref={inputRef}
                 type="number"
+                autoFocus={true}
                 value={phone_number}
                 onChange={handlePhoneChange}
                 placeholder={`Phone Number`}
@@ -57,9 +66,9 @@ function LoginDialog({
               onClick={() => {
                 getUserDetails(phone_number);
               }}
-              className="bg-[#1e5cef] flex justify-center items-center py-3 px-10 text-white rounded-3xl "
+              className="cursor-pointer bg-[#1e5cef] flex justify-center items-center py-3 px-10 text-white rounded-3xl "
             >
-              Login
+              {is_login_loading ? <ThreeDots color="text-white" /> : "Login"}
             </button>
           </div>
         </div>

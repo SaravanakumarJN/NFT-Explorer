@@ -26,7 +26,7 @@ function FriendRequest() {
         <div className="">
           {/* Tabs to see pending requests */}
           <div className="flex gap-2">
-            <button className="py-6 flex text-5xl font-bold text-[#1e5cef] justify-center items-center">
+            <button className="cursor-pointer py-6 flex text-5xl font-bold text-[#1e5cef] justify-center items-center">
               Community Peers
             </button>
           </div>
