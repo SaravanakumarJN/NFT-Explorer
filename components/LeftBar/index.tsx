@@ -1,9 +1,14 @@
+import { useState } from "react";
 import styled from "styled-components";
+import CreateIcon from "../../assets/icons/create.png";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import NewPost from "../NewPost";
 
 const MainCon = styled.div`
   width: 18%;
 `;
+
 const LogoConatiner = styled.div``;
 
 const FooterCon = styled.div``;
@@ -31,7 +36,9 @@ const rounts = [
   },
 ];
 
-const LeftBar = () => {
+const LeftBar = ({ createNFT }: any) => {
+  const [uplaodClicked, setuplaodClicked] = useState(false);
+
   return (
     <MainCon className="h-[100vh] px-8 py-10 flex flex-col justify-between gradiant">
       <div className="flex flex-col gap-8">
@@ -65,12 +72,25 @@ const LeftBar = () => {
           })}
         </div>
       </div>
-      <FooterCon className="rounded-3xl py-5 px-4 bg-white">
-        <div>
-          <h1>Your Balance: 23423</h1>
+      <FooterCon className="">
+        <ConnectButton />
+        <div className="mb-4 opacity-50 hover:opacity-100">
+          <div className="border-[1px] border-black w-fit px-5 py-2 rounded-3xl">
+            <button
+              className="flex items-center gap-2 font-medium"
+              onClick={() => setuplaodClicked(true)}
+            >
+              Create <img src={CreateIcon.src} className="w-[20px]" />
+            </button>
+          </div>
         </div>
-       
+        <div className="rounded-3xl py-5 px-4 bg-white">
+          <div>
+            <h1>Your Balance: 23423</h1>
+          </div>
+        </div>
       </FooterCon>
+      {uplaodClicked && <NewPost createNFT={createNFT} setuplaodClicked={setuplaodClicked} />}
     </MainCon>
   );
 };
