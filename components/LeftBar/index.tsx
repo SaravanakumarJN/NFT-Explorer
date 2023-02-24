@@ -23,8 +23,8 @@ const rounts = [
     route: "My Collection",
   },
   {
-    name: "Market",
-    route: "market",
+    name: "My Assets",
+    route: "my-asset",
   },
   {
     name: "Sales",
@@ -72,7 +72,8 @@ const LeftBar = ({ createNFT }: any) => {
               >
                 <h2
                   className={`font-semibold text-sm ${
-                    router.pathname === `/${route}`
+                    router.pathname === `/${route}` ||
+                    (name === "Home" && router.pathname === `/`)
                       ? "text-[#3b68fe]"
                       : "text-[#a2adc0]"
                   } `}
