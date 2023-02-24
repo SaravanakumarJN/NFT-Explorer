@@ -104,6 +104,7 @@ const NewPost = ({ setuplaodClicked, createNFT }: any) => {
     // setOpenLogin(false);
   };
 
+
   const getUserDetails = async (phone_number) => {
     setIsLoginLoading(true);
     const userRef = doc(firebaseDB, "users", `${phone_number}`);

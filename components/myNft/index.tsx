@@ -744,18 +744,19 @@ export const posts = [
 const MyNft = () => {
   const [user_data] = useAtom(user_atom);
   const [nft, userNft] = useAtom(user_nfts);
-
+  // console.log(user_data)
   return (
-    <div className='grid grid-cols-3 gap-4 p-5 justify-center'>
+    <div className='p-5'>
+      <h1 className=''>My Assets</h1>
+ <div className='flex  gap-6  flex-wrap m-auto'>
       {nft.map(({ metadata }, i) => {
-
         const { image, title, name, description } = metadata;
-
         return (
-          <div className='w-fit'>
+          <div >
             <NftCard
               key={i}
               image={image}
+              userImage={user_data.profile_image}
               title={title || name}
               description={description}
             />
@@ -763,6 +764,8 @@ const MyNft = () => {
         );
       })}
     </div>
+    </div>
+   
   );
 };
 
