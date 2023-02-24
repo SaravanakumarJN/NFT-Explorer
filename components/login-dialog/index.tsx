@@ -28,12 +28,12 @@ function LoginDialog({
       <div className={`h-full grid place-items-center`}>
         <div className="w-[500px] h-[250px] bg-black rounded-3xl p-4">
           <div className="flex relative">
-            <button
+            {/* <button
               onClick={handleCloseLoginDialog}
               className="cursor-pointer text-white font-semibold absolute top-2 right-2"
             >
               Close
-            </button>
+            </button> */}
             <div className="flex gap-2">
               <span className="text-white">Login</span>
             </div>

@@ -29,12 +29,6 @@ const Home: NextPage = () => {
       theme: "light",
     });
 
-  useEffect(() => {
-    if (nfts && nfts?.length) {
-      notify("Your NFT is minted successfully, Hurrrrrrreeeeee");
-    }
-  }, [nfts]);
-
   const nftAddress = "0xa051492C621f40719F5a202b202Df82b8AC336B4";
   const ABI = [
     {
@@ -244,15 +238,6 @@ const Home: NextPage = () => {
     },
   ];
 
-  const notify = (message) =>
-    toast(message, {
-      position: 'top-center',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      theme: 'light',
-    });
-
   const contract = useContract({
     address: nftAddress,
     abi: ABI,
@@ -320,7 +305,6 @@ const Home: NextPage = () => {
       description,
       image,
     };
-    console.log(metadata);
 
     const auth =
       'Basic ' +
@@ -345,7 +329,7 @@ const Home: NextPage = () => {
           notify('NFT Minted successfully');
           getNFTs(address);
           router.push('/my-asset');
-        }, 5000);
+        }, 7000);
       }
     } catch (error) {
       console.log(error);
