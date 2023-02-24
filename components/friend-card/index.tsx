@@ -52,7 +52,7 @@ function FriendCard({
       {is_friend && (
         <button
           onClick={() => {
-            handleSendCrypto(name, profile_image);
+            handleSendCrypto(name, profile_image, client_id);
           }}
           className="bg-[#3772ff] text-white p-2 rounded-lg"
         >

@@ -25,9 +25,9 @@ const Dashboard = () => {
   const [form_data, setFormData] = useState(null);
   const [open_login, setOpenLogin] = useState(false);
 
-  const handleSendCrypto = (name, profile_img) => {
+  const handleSendCrypto = (name, profile_img, client_id) => {
     setFormData((prev) => {
-      return { ...prev, name, profile_img };
+      return { ...prev, name, profile_image: profile_img, client_id };
     });
   };
 

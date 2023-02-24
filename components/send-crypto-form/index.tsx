@@ -1,5 +1,18 @@
 import { memo, useState } from "react";
 
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { firebaseDB } from "../../firebase.cofig";
+import { useAtom } from "jotai";
+import { user_atom } from "../stores/user.store";
+
 function SendCryptoForm({
   receiver_name,
   receiver_img,
@@ -7,12 +20,53 @@ function SendCryptoForm({
   coin_symbol,
   coin_icon,
   handleCloseSendCrypto,
+  client_id,
 }) {
   const [amount, setAmount] = useState("");
+  const [user_data, setUserData] = useAtom(user_atom);
 
   const handleChange = (event) => {
     const { value } = event?.target;
     setAmount(value);
+  };
+
+  const handleAddUserBalance = async () => {
+    const cityRef = doc(firebaseDB, "balances", "9643011147");
+    const docRef = await setDoc(cityRef, {
+      btc: "100",
+      eth: "1000",
+      matic: "10000",
+    });
+
+    console.log(docRef);
+  };
+
+  const handleTransfer = async (symbol, quantity) => {
+    symbol = symbol?.toLowerCase();
+    const userRef = doc(firebaseDB, "users", user_data?.client_id);
+    const userWalletRef = doc(firebaseDB, "balances", user_data?.client_id);
+
+    const receiverRef = doc(firebaseDB, "users", client_id);
+    const receiverWalletRef = doc(firebaseDB, "balances", client_id);
+
+    const receiver = await getDoc(receiverRef);
+    const receiverWallet = await getDoc(receiverWalletRef);
+
+    if (receiver?.exists() && receiverWallet?.exists()) {
+      const receiver_details = await (await getDoc(receiverWalletRef)).data();
+      const user_wallet_details = await (await getDoc(userWalletRef)).data();
+
+      if (user_wallet_details?.[symbol] >= quantity) {
+        const docref = await updateDoc(receiverWalletRef, {
+          [symbol]: receiver_details?.[symbol] + quantity,
+        });
+        const doc2ref = await updateDoc(userWalletRef, {
+          [symbol]: user_wallet_details?.[symbol] - quantity,
+        });
+      }
+    } else {
+      console.log("user doesn't exists");
+    }
   };
 
   return (
@@ -33,6 +87,7 @@ function SendCryptoForm({
               src={receiver_img}
             />
             <span className="text-white">{receiver_name}</span>
+            <span className="text-[#6b6b6b] font-bold">Reciever</span>
           </div>
         </div>
         <div className="pt-5">
@@ -54,9 +109,18 @@ function SendCryptoForm({
           </div>
         </div>
         <div className="pt-5">
-          <button className="bg-[#292929] flex justify-center items-center py-3 px-5 text-white rounded-3xl ">
+          <button
+            onClick={() => handleTransfer(coin_symbol, amount)}
+            className="bg-[#1e5cef] flex justify-center items-center py-3 px-5 text-white rounded-3xl "
+          >
             Send Crypto
           </button>
+          {/* <button
+            onClick={handleAddUserBalance}
+            className="bg-[#1e5cef] flex justify-center items-center py-3 px-5 text-white rounded-3xl "
+          >
+            Add Balance
+          </button> */}
         </div>
       </div>
     </div>

@@ -73,6 +73,7 @@ function FindFriends() {
   const getUserDetails = async (phone_number) => {
     const userRef = doc(firebaseDB, "users", `${phone_number}`);
     const user_details = await (await getDoc(userRef)).data();
+
     setUserData(user_details);
     setIsLoggedIn(true);
     setOpenLogin(false);

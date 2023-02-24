@@ -10,9 +10,9 @@ function FriendRequest() {
   const [user_data] = useAtom(user_atom);
   const [form_data, setFormData] = useState(null);
 
-  const handleSendCrypto = (name, profile_img) => {
+  const handleSendCrypto = (name, profile_img, client_id) => {
     setFormData((prev) => {
-      return { ...prev, name, profile_img };
+      return { ...prev, name, profile_image: profile_img, client_id };
     });
   };
 
@@ -59,9 +59,10 @@ function FriendRequest() {
             <SendCryptoForm
               receiver_name={form_data?.name}
               receiver_img={form_data?.profile_image}
-              coin_icon="https://files.coinswitch.co/public/coins/btc.png"
-              coin_name="Bitcoin"
-              coin_symbol="BTC"
+              client_id={form_data?.client_id}
+              coin_icon="https://files.coinswitch.co/public/coins/eth.png"
+              coin_name="Ethereum"
+              coin_symbol="ETH"
               handleCloseSendCrypto={handleCloseSendCrypto}
             />
           )}
