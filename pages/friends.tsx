@@ -21,9 +21,9 @@ import { firebaseDB } from "../firebase.cofig";
 const Dashboard = () => {
   const [is_logged_in, setIsLoggedIn] = useState(false);
   const [login_error, setLoginError] = useState("");
+  const [is_login_loading, setIsLoginLoading] = useState(false);
   const [user_data, setUserData] = useAtom(user_atom);
   const [form_data, setFormData] = useState(null);
-  const [is_login_loading, setIsLoginLoading] = useState(false);
   const [open_login, setOpenLogin] = useState(false);
 
   const handleSendCrypto = (name, profile_img, client_id) => {

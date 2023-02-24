@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import UploadIcon from "../../assets/icons/upload.png";
 import OptionIcon from "../../assets/icons/option.png";
+import Link from "next/link";
 
 const MainCon = styled.div`
   width: 22%;
@@ -40,6 +41,7 @@ const RightBar = () => {
           })}
         </div>
       </div>
+  <Link href="/my-asset">
 
       <UserBox className="flex flex-col rounded-3xl overflow-hidden max-h-[50%] bg-white">
         <div className="relative">
@@ -69,6 +71,7 @@ const RightBar = () => {
           </div>
         </div>
       </UserBox>
+      </Link>
     </MainCon>
   );
 };

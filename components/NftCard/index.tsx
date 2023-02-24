@@ -12,6 +12,7 @@ interface NftCardProps {
   title: string;
   likes: number;
   userImage: string;
+  isVerified:boolean
 }
 const ImageBox = styled.div<{ image: string }>`
   background-image: url("${({ image }) => image}");
@@ -27,10 +28,11 @@ const NftCard: FC<NftCardProps> = ({
   title,
   likes,
   userImage,
+  isVerified
 }) => {
   console.log(VerifiedIcon.src)
   return (
-    <div className="bg-white w-fit rounded-3xl p-3">
+    <div className="bg-white w-fit rounded-3xl p-3 flex flex-col">
       <ImageBox
         {...{ image }}
         className={`rounded-3xl aspect-square bg-cover bg-center w-[200px] p-3 flex items-end justify-end`}
@@ -45,15 +47,21 @@ const NftCard: FC<NftCardProps> = ({
           </p>
         </div>
       </ImageBox>
-      <div>
-        <div className="mt-2 flex justify-between">
+      <div className=" flex-1 flex flex-col justify-between">
+        <div>
+        <div className="mt-2 flex justify-between ">
           <div className="flex gap-1 items-center">
             <h3 className="text-gray-500 text-xs font-medium">{userName}</h3>
-            <img className="w-[15px]" src={VerifiedIcon.src} />
+         {isVerified &&   <img className="w-[15px]" src={VerifiedIcon.src} />}
           </div>
           <h3 className="text-gray-500 text-xs font-medium">{likes} Likes</h3>
         </div>
-        <h1 className="text-sm font-bold mt-3">{title}</h1>
+        <div className="w-[200px] overflow-hidden">
+
+        <h1 className="text-sm font-bold mt-3 w-full">{title}</h1>
+        </div>
+        </div>
+        
         <div className="mt-2 flex justify-between">
           <img
             className="w-[25px] rounded-full aspect-square object-cover"

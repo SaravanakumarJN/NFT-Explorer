@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -12,8 +13,14 @@ import SearchIcon from "../../assets/icons/search.png";
 import NftCard from "../NftCard";
 import TopNftCard from "../TopNftCard";
 import PopularCreatorCard from "../PopularCreatorCard";
+import { useAtom } from "jotai";
+import { user_atom } from "../stores/user.store";
+import { useEffect, useRef, useState } from "react";
 
 const HomePage = () => {
+  const [user_data] = useAtom(user_atom);
+  const [posts, setPosts] = useState([]);
+  const postsRef = useRef()
   const handleAddUser = async () => {
     const cityRef = doc(firebaseDB, "users", "9643011147");
     const docRef = await setDoc(cityRef, {
@@ -64,109 +71,82 @@ const HomePage = () => {
     const user = await getDoc(friendRef);
 
     if (user.exists()) {
-      // const myRef = doc(firebaseDB, "users");
 
       const userData = user.data();
 
-      // const docref = await updateDoc(myRef, {
-      //   friends: arrayUnion({ ...userData }),
-      // });
       console.log("fdk", userData);
     } else {
-      // doc.data() will be undefined in this case
+
       console.log("No such document!");
     }
   };
 
-  // function uploadVideo() {
-  //   const storage = getStorage();
-  //   const storageRef = ref(storage, "videos/" + uuid());
-  //   const UploadTask = uploadBytesResumable(storageRef, orignalUrl.current);
-  //   UploadTask.on(
-  //     "state_changed",
-  //     (snapshot) => {
-  //       setProgressBar(
-  //         Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-  //       );
-  //     },
-  //     (err) => {
-  //       dispatch(alertMessage("warning", "Somthing went Wrong"));
-  //     },
-  //     () => {
-  //       getDownloadURL(UploadTask.snapshot.ref).then((url) => {
-  //         uploadOnTheServer(url.split("&")[0]);
-  //       });
-  //     }
-  //   );
-  // }
+  const getPostsData = async () => {
+    const postRef = collection(firebaseDB, "nftCat");
+    const posts = await getDocs(postRef);
+    let data: any = [];
+    posts.forEach((doc) => {
+      const d = doc.data()
+      data = [...data,...d.data]
+    });
+    setPosts(data)
+    postsRef.current = data
+  };
+  useEffect(() => {
+    getPostsData();
+  }, []);
 
-  // const handleFile = () => {
-  //   fileRef.current.click();
-  //   fileRef.current.addEventListener("change", function () {
-  //     const reader = new FileReader();
+  function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
 
-  //     reader.addEventListener("load", () => {
-  //       console.log(this.files[0].size);
-  //       orignalUrl.current = this.files[0];
-  //       setFileType(this.files[0].type);
-  //       setFileUrl(reader.result);
-  //     });
-  //     reader.readAsDataURL(this.files[0]);
-  //   });
-  // };
 
+
+console.log(posts)
   return (
     <div className="flex-1 py-10 px-7 ">
       <div className="bg-white py-2 px-4 w-[40%] rounded-full flex items-center gap-2">
         <img src={SearchIcon.src} className="w-[15px]" />
-        <input className="focus-within:outline-none flex-1" type="text" />
+        <input className="focus-within:outline-none flex-1" type="text" onChange={(e)=>{
+            if(e.target.value)
+            setPosts(postsRef.current.filter((d)=>d.node.name.toLowerCase().includes(e.target.value.toLowerCase())))
+            else setPosts(postsRef.current)
+        }} />
       </div>
-      {/* <input  type="file" /> */}
-      {/* <button onClick={handleAddUser}>handleAddUser</button> */}
-      {/* <button onClick={handleNewBalanceasync}>handleNewBalance</button> */}
-      {/* <button onClick={handleUpdateWalletAddress}>handleUpdateWalletAddress</button> */}
-      <button onClick={handleUpdateFriends}>handleUpdateFriends</button>
-      <div className="mt-4 flex gap-5">
-        <NftCard
-          image="https://i.guim.co.uk/img/media/ef8492feb3715ed4de705727d9f513c168a8b196/37_0_1125_675/master/1125.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=cb647d991d8897cc8a81d2c33c4406d5"
-          coinImage="https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/ethereum.svg"
-          coinExt="ETH"
-          price={9.04}
-          likes={120}
-          userName="Ofspace NFT"
-          userId="ofspace99"
-          title="NFT Cube Design #92"
-          userImage="https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip"
-        />
-        <NftCard
-          image="https://cdn.prod.www.spiegel.de/images/d2caafb1-70da-47e2-ba48-efd66565cde1_w996_r0.9975262832405689_fpx44.98_fpy48.86.jpg"
-          coinImage="https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/bitcoin.svg"
-          coinExt="BTC"
-          price={22.04}
-          likes={120}
-          userName="Ofspace NFT"
-          userId="ofspace99"
-          title="NFT Cube Design #93"
-          userImage="https://images.wsj.net/im-491402?width=700&height=700"
-        />
-        <NftCard
-          image="https://www.latercera.com/resizer/Jw37YLm2lX8o_akIpM57enxchxA=/arc-anglerfish-arc2-prod-copesa/public/XQP24CTNQND2TBDZ7AQN54D44Y.jpg"
-          coinImage="https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/ethereum.svg"
-          coinExt="ETH"
-          price={10.04}
-          likes={120}
-          userName="Ofspace NFT"
-          userId="ofspace99"
-          title="NFT Cube Design #94"
-          userImage="https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip"
-        />
+      <div className="mt-4 flex gap-5 w-full overflow-scroll">
+        {posts.map(({node}) => {
+          const image = node?.banner?.split("files/")?.[1]?.split("?")?.[0]
+          return image && (
+            <NftCard
+            key={node.id}
+              image={`https://dl.openseauserdata.com/cache/originImage/files/${image}`}
+              coinImage="https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/ethereum.svg"
+              coinExt="ETH"
+              price={9.04}
+              isVerified={node?.verificationStatus === "VERIFIED"}
+              likes={Math.floor(Math.random()*1000)}
+              userName="Ofspace NFT"
+              userId={`@${image.split("").splice(0,10).join("")}`}
+              title={node.name}
+              userImage="https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip"
+            />
+          );
+        })}
       </div>
       <div className="mt-5">
         <TopNftCard
           values={[
             {
               userImage:
-                "https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip",
+              `https://dl.openseauserdata.com/cache/originImage/files/${posts[6]?.node?.banner?.split("files/")?.[1]?.split("?")?.[0]}`,
               coinImage:
                 "https://csk-genesis-stage.s3.ap-southeast-1.amazonaws.com/icons/coins/ethereum.svg",
               price: "4 030,98",

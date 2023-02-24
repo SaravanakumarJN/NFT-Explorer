@@ -14,8 +14,8 @@ const FooterCon = styled.div``;
 
 const rounts = [
   {
-    name: "Overview",
-    route: "overview",
+    name: "Home",
+    route: "/",
   },
   {
     name: "Active Bids",

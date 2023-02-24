@@ -57,7 +57,7 @@ function LoginDialog({
                 onChange={handlePhoneChange}
                 placeholder={`Phone Number`}
                 maxLength={10}
-                className="outline-none text-white text-3xl bg-transparent w-[200px]"
+                className="outline-none text-white text-3xl bg-transparent w-[210px]"
               />
             </div>
           </div>
