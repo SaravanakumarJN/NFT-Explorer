@@ -1,7 +1,9 @@
+import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Layout from "../../components/Layout";
+import { posts_data } from "../../components/stores/user.store";
 
 const ImageBanner = styled.div<{ image: string }>`
   background-image: url(${({ image }) => image});
@@ -13,6 +15,7 @@ const ImageBanner = styled.div<{ image: string }>`
 
 const Post = () => {
   const router = useRouter()
+  const [postsData, setPostsData] = useAtom(posts_data);
   const { id } = router.query
   const image =
     "https://cdn.prod.www.spiegel.de/images/d2caafb1-70da-47e2-ba48-efd66565cde1_w996_r0.9975262832405689_fpx44.98_fpy48.86.jpg";
