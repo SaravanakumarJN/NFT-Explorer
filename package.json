@@ -16,6 +16,7 @@
     "ethers": "^5.0.0",
     "firebase": "^9.17.1",
     "ipfs-http-client": "^60.0.0",
+    "jotai": "^2.0.2",
     "next": "^12.1.6",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

@@ -1,13 +1,12 @@
 import { useState } from "react";
+import Link from "next/link";
 import styled from "styled-components";
 import CreateIcon from "../../assets/icons/create.png";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import NewPost from "../NewPost";
 
-const MainCon = styled.div`
-  width: 18%;
-`;
+const MainCon = styled.div``;
 
 const LogoConatiner = styled.div``;
 
@@ -34,6 +33,14 @@ const rounts = [
     name: "Schedule",
     route: "schedule",
   },
+  {
+    name: "Friends",
+    route: "friends",
+  },
+  {
+    name: "Find Friends",
+    route: "find-friends",
+  },
 ];
 
 const LeftBar = ({ createNFT }: any) => {
@@ -53,9 +60,10 @@ const LeftBar = ({ createNFT }: any) => {
           </div>
         </LogoConatiner>
         <div className="flex flex-col gap-3">
-          {rounts.map(({ name }, index) => {
+          {rounts.map(({ name, route }, index) => {
             return (
-              <div
+              <Link
+                href={route}
                 className={`w-[70%] py-3 px-3 rounded-full cursor-pointer ${
                   index === 0 ? "bg-[#f4f7ff]" : ""
                 }`}
@@ -67,7 +75,7 @@ const LeftBar = ({ createNFT }: any) => {
                 >
                   {name}
                 </h2>
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -90,7 +98,9 @@ const LeftBar = ({ createNFT }: any) => {
           </div>
         </div>
       </FooterCon>
-      {uplaodClicked && <NewPost createNFT={createNFT} setuplaodClicked={setuplaodClicked} />}
+      {uplaodClicked && (
+        <NewPost createNFT={createNFT} setuplaodClicked={setuplaodClicked} />
+      )}
     </MainCon>
   );
 };
