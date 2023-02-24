@@ -15,7 +15,7 @@ const PopularCreatorCard = () => {
         />
         <div className="flex gap-1 items-center ">
           <h1 className=" text-lg  font-bold">Jaskaran Singh</h1>
-          <img className="w-[20px]" src={VerifiedIcon} />
+          <img className="w-[20px]" src={VerifiedIcon.src} />
         </div>
       </div>
       <div className="p-5 flex justify-between items-center">
@@ -25,7 +25,7 @@ const PopularCreatorCard = () => {
             className="rounded-full aspect-square object-cover w-[40px] z-30"
           />
           <img
-            src="https://www.latercera.com/resizer/Jw37YLm2lX8o_akIpM57enxchxA=/arc-anglerfish-arc2-prod-copesa/public/XQP24CTNQND2TBDZ7AQN54D44Y.jpg"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJhdKMuUQsc1XNK9GpSv145tRUMZg66KctdDOo55CJi72sSgWFfcIWz3NPRQTuAkc_Hk4&usqp=CAU"
             className="rounded-full aspect-square object-cover w-[40px] translate-x-[-10px] z-20"
           />
           <div className="w-[40px] aspect-square bg-white translate-x-[-20px] rounded-full flex items-center justify-center text-xs font-semibold text-[#3670fa]">

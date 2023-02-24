@@ -113,6 +113,7 @@ const NewPost = ({ setuplaodClicked, createNFT }: any) => {
     if (user?.exists()) {
       const user_details = await (await getDoc(userRef)).data();
       console.log("userRef", userRef, user_details);
+      localStorage.setItem("my-login",JSON.stringify(user_details))
       setUserData(user_details);
     } else {
       setLoginError("User Doesn't Exists");
