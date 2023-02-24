@@ -6,6 +6,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import NewPost from "../NewPost";
 import { useRouter } from "next/router";
+import { useAtom } from "jotai";
+import { user_atom } from "../stores/user.store";
 
 const MainCon = styled.div``;
 
@@ -20,7 +22,7 @@ const rounts = [
   },
   {
     name: "Active Bids",
-    route: "My Collection",
+    route: "/",
   },
   {
     name: "My Assets",
@@ -28,11 +30,11 @@ const rounts = [
   },
   {
     name: "Sales",
-    route: "sales",
+    route: "/",
   },
   {
     name: "Schedule",
-    route: "schedule",
+    route: "/",
   },
   {
     name: "Friends",
@@ -47,6 +49,7 @@ const rounts = [
 const LeftBar = ({ createNFT }: any) => {
   const router = useRouter();
   const [uplaodClicked, setuplaodClicked] = useState(false);
+  const [_, setUserData] = useAtom(user_atom);
 
   return (
     <MainCon className="h-[100vh] px-8 py-10 flex flex-col justify-between gradiant">
@@ -66,7 +69,7 @@ const LeftBar = ({ createNFT }: any) => {
             return (
               <Link
                 href={route}
-                className={`cursor-pointer w-[70%] py-3 px-3 rounded-full cursor-pointer ${
+                className={` w-[70%] py-3 px-3 rounded-full cursor-pointer ${
                   index === 0 ? "bg-[#f4f7ff]" : ""
                 }`}
               >
@@ -97,10 +100,14 @@ const LeftBar = ({ createNFT }: any) => {
             </button>
           </div>
         </div>
-        <div className="rounded-3xl py-5 px-4 bg-white">
-          <div>
-            <h1>Your Balance: 23423</h1>
-          </div>
+        <div
+          className="rounded-3xl flex justify-center font-bold py-5 px-4 bg-white"
+          onClick={() => {
+            localStorage.clear();
+            setUserData(null);
+          }}
+        >
+          LogOut
         </div>
       </FooterCon>
       {uplaodClicked && (

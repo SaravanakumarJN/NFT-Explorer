@@ -1,11 +1,14 @@
+import { useAtom } from "jotai";
 import styled from "styled-components";
 import VerifiedIcon from "../../assets/icons/verified.png";
+import { user_atom } from "../stores/user.store";
 
 const MainCon = styled.div`
      width: min(max(50%,400px),500px);
 `
 
 const PopularCreatorCard = () => {
+  const [user_data, setUserData] = useAtom(user_atom);
   return (
     <MainCon className="w-[50%] bg-[#3670fa] p-[1px] rounded-3xl">
       <div className="flex gap-2 bg-white p-4 rounded-3xl">
@@ -14,7 +17,7 @@ const PopularCreatorCard = () => {
           src="https://images.theconversation.com/files/417198/original/file-20210820-25-1j3afhs.jpeg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip"
         />
         <div className="flex gap-1 items-center ">
-          <h1 className=" text-lg  font-bold">Jaskaran Singh</h1>
+          <h1 className=" text-lg  font-bold">{user_data?.name ?? "@userJas"}</h1>
           <img className="w-[20px]" src={VerifiedIcon.src} />
         </div>
       </div>

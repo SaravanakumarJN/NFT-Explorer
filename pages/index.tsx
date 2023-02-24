@@ -5,16 +5,32 @@ import { useEffect, useState } from "react";
 import { create } from "ipfs-http-client";
 import Layout from "../components/Layout";
 import HomePage from "../components/Home";
+import { toast } from "react-toastify";
 
 const Home: NextPage = () => {
   const { address, isDisconnected, isConnected } = useAccount();
   const [nfts, setNfts]: any = useState([]);
-  console.log(nfts,"f,nk")
+  console.log(nfts, "f,nk");
   const [alchemy, setAlchemy]: any = useState(null);
   const [title, setTitle] = useState("");
   const [description, setdescription] = useState("");
   const [image, setImage] = useState("");
   const { data: signer, isError, isLoading } = useSigner();
+
+  const notify = (message) =>
+    toast(message, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: "light",
+    });
+
+  useEffect(() => {
+    if (nfts && nfts?.length) {
+      notify("Your NFT is minted successfully, Hurrrrrrreeeeee");
+    }
+  }, [nfts]);
 
   const nftAddress = "0xa051492C621f40719F5a202b202Df82b8AC336B4";
   const ABI = [
@@ -286,7 +302,7 @@ const Home: NextPage = () => {
     console.log(client, response);
   };
 
-   const createNFT = async ({title,description,image}:any) => {
+  const createNFT = async ({ title, description, image }: any) => {
     if (!title || !description || !image) {
       alert("fields are required");
     }
@@ -311,7 +327,7 @@ const Home: NextPage = () => {
     const response = await client.add(JSON.stringify(metadata));
     console.log(response, "metadata");
 
-    console.log(contract,"skdjc");
+    console.log(contract, "skdjc");
     const transaction = await contract?.mint(
       `https://ipfs.io/ipfs/${response.path}`
     );
@@ -321,7 +337,6 @@ const Home: NextPage = () => {
   return (
     <div className="w-full divide-solid h-[100vh] flex">
       <Layout createNFT={createNFT}>
-        
         <HomePage />
       </Layout>
     </div>
